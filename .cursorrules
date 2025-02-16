@@ -20,3 +20,8 @@ This is where we host the project:
         }
     }
 } 
+
+
+To deploy the project, push to github and run the following command:
+
+./deploy.sh
