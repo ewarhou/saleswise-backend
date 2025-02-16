@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-4lr^z@#c@dzk%po-72(5$oe^i3xnw0(1*nvn5l6q*i=*6$kllh'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['orangebackend.palman.app', '209.97.129.64']
+ALLOWED_HOSTS = ['orangebackend.palman.app', '209.97.129.64', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -136,3 +136,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
+
+# Custom User Model
+AUTH_USER_MODEL = 'api.User'

@@ -1,21 +1,20 @@
 from ninja import NinjaAPI, Schema
-from django.contrib.auth.models import User
+from api.models import User
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import authenticate
 from typing import Optional
 from ninja.security import HttpBearer
 from django.conf import settings
-import jwt
+import secrets
 from datetime import datetime, timedelta
 
 class AuthBearer(HttpBearer):
     def authenticate(self, request, token):
         try:
-            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-            user = User.objects.get(id=payload['user_id'])
+            user = User.objects.get(auth_token=token)
             request.user = user
             return user
-        except:
+        except User.DoesNotExist:
             return None
 
 api = NinjaAPI(csrf=False, auth=AuthBearer())
@@ -41,16 +40,13 @@ def register(request, data: SignupSchema):
     if User.objects.filter(email=data.email).exists():
         return {"success": False, "message": "Email already registered"}
     
+    token = secrets.token_urlsafe(32)
     user = User.objects.create(
         username=data.email,
         email=data.email,
-        password=make_password(data.password)
+        password=make_password(data.password),
+        auth_token=token
     )
-    
-    token = jwt.encode({
-        'user_id': user.id,
-        'exp': datetime.utcnow() + timedelta(days=30)
-    }, settings.SECRET_KEY, algorithm='HS256')
     
     return {
         "success": True,
@@ -64,10 +60,9 @@ def login(request, data: LoginSchema):
     if user is None:
         return {"success": False, "message": "Invalid credentials"}
     
-    token = jwt.encode({
-        'user_id': user.id,
-        'exp': datetime.utcnow() + timedelta(days=30)
-    }, settings.SECRET_KEY, algorithm='HS256')
+    token = secrets.token_urlsafe(32)
+    user.auth_token = token
+    user.save()
     
     return {
         "success": True,
