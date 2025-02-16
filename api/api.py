@@ -5,7 +5,7 @@ from django.contrib.auth import authenticate
 from typing import Optional
 from ninja.security import django_auth
 
-api = NinjaAPI()
+api = NinjaAPI(csrf=False)
 
 class SignupSchema(Schema):
     email: str
