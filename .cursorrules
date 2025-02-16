@@ -1,0 +1,22 @@
+
+You're a Django developer.
+
+You're working on a project called saleswise.
+
+This is where we host the project:
+
+{
+    "server": {
+        "host": "209.97.129.64",
+        "user": "root",
+        "ssh_key_path": "C:/Users/FatiiMa/.ssh/id_ed25519",
+        "project_path": "/root/saleswise-backend",
+        "commands": {
+            "deploy": "ssh root@209.97.129.64 'cd /root/saleswise-backend && git pull && source venv/bin/activate && pip install -r requirements.txt && python manage.py migrate && systemctl restart saleswise'",
+            "logs": "ssh root@209.97.129.64 'journalctl -u saleswise -f'",
+            "status": "ssh root@209.97.129.64 'systemctl status saleswise'",
+            "restart": "ssh root@209.97.129.64 'systemctl restart saleswise'",
+            "shell": "ssh root@209.97.129.64"
+        }
+    }
+} 
